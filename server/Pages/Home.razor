@@ -1,0 +1,211 @@
+﻿@page "/"
+@page "/home"
+@layout MainLayout
+@inherits InDrivoHRM.Pages.HomeComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using InDrivoHRM.Models.Crm
+@using Microsoft.AspNetCore.Identity;
+@using InDrivoHRM.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Home> L
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenIcon Icon="assessment">
+    </RadzenIcon>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Blazor CRM Dashboard">
+    </RadzenHeading>
+    <RadzenHeading Size="H2" Text="Monthly Stats">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12 col-xl-3 col-lg-6">
+        <RadzenCard style="margin-bottom: 16px">
+          <ChildContent>
+            <div class="row">
+              <div class="col-4 align-items-center d-flex">
+                <RadzenIcon Icon="attach_money" style="background-color: #68d5c8; font-size: 48px; height: 64px; width: 64px">
+                </RadzenIcon>
+              </div>
+              <div class="col-sm-8">
+                <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Revenue">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="LAST MONTH">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #68d5c8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(monthlyStats?.Revenue.ToString("C"))">
+                </RadzenHeading>
+              </div>
+            </div>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-xl-3 col-lg-6">
+        <RadzenCard style="margin-bottom: 16px">
+          <ChildContent>
+            <div class="row">
+              <div class="col-4 align-items-center d-flex">
+                <RadzenIcon Icon="shopping_cart" style="background-color: #f9777f; font-size: 48px; height: 64px; width: 64px">
+                </RadzenIcon>
+              </div>
+              <div class="col-sm-8">
+                <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Opportunities">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="LAST MONTH">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #f9777f; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(monthlyStats?.Opportunities.ToString())">
+                </RadzenHeading>
+              </div>
+            </div>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-xl-3 col-lg-6">
+        <RadzenCard style="margin-bottom: 16px">
+          <ChildContent>
+            <div class="row">
+              <div class="col-4 align-items-center d-flex">
+                <RadzenIcon Icon="account_balance_wallet" style="background-color: #ff6d41; font-size: 48px; height: 64px; width: 64px">
+                </RadzenIcon>
+              </div>
+              <div class="col-sm-8">
+                <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Average deal size">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="LAST MONTH">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #ff6d41; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(monthlyStats?.AverageDealSize.ToString())">
+                </RadzenHeading>
+              </div>
+            </div>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-xl-3 col-lg-6">
+        <RadzenCard style="margin-bottom: 16px">
+          <ChildContent>
+            <div class="row">
+              <div class="col-4 align-items-center d-flex">
+                <RadzenIcon Icon="thumb_up" style="background-color: #479cc8; font-size: 48px; height: 64px; width: 64px">
+                </RadzenIcon>
+              </div>
+              <div class="col-sm-8">
+                <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Win Rate">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="LAST MONTH">
+                </RadzenHeading>
+                <RadzenHeading Size="H4" style="color: #479cc8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(monthlyStats?.Ratio.ToString("P"))">
+                </RadzenHeading>
+              </div>
+            </div>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+    </div>
+    <RadzenHeading Size="H2" Text="Company Performance">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12 col-lg-6 col-xl-4">
+        <RadzenCard>
+          <ChildContent>
+            <RadzenChart ColorScheme="ColorScheme.Pastel">
+              <ChildContent>
+                <RadzenColumnSeries CategoryProperty="Company" Data="@revenueByCompany" ValueProperty="Revenue">
+                </RadzenColumnSeries>
+              </ChildContent>
+            </RadzenChart>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-lg-6 col-xl-4">
+        <RadzenCard>
+          <ChildContent>
+            <RadzenChart ColorScheme="ColorScheme.Pastel">
+              <ChildContent>
+                <RadzenLineSeries CategoryProperty="Month" Data="@revenueByMonth" ValueProperty="Revenue">
+                </RadzenLineSeries>
+              </ChildContent>
+            </RadzenChart>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-lg-6 col-xl-4">
+        <RadzenCard>
+          <ChildContent>
+            <RadzenChart ColorScheme="ColorScheme.Pastel">
+              <ChildContent>
+                <RadzenBarSeries CategoryProperty="Employee" Data="@revenueByEmployee" ValueProperty="Revenue">
+                </RadzenBarSeries>
+              </ChildContent>
+            </RadzenChart>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+    </div>
+    <RadzenHeading Size="H2" Text="Pending Work">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12 col-xl-6">
+        <RadzenCard>
+          <ChildContent>
+            <RadzenHeading Size="H3" Text="Recent Opportunities">
+            </RadzenHeading>
+            <RadzenGrid @ref="grid0" AllowSorting="true" Data="@getOpportunitiesResult" TItem="Opportunity">
+              <Columns>
+                <RadzenGridColumn TItem="Opportunity" SortProperty="Contact.FirstName" Title="Contact">
+                  <Template Context="data">
+                  @(data.Contact.FirstName) @(data.Contact.LastName)
+                  </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Opportunity" Property="Amount" Title="Amount">
+                  <Template Context="data">
+                  @(data.Amount.ToString("C"))
+                  </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Opportunity" Property="OpportunityStatus.Name" Title="Status">
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Opportunity" Format="date-time" FormatString="{0:d}" Property="CloseDate" Title="Close Date" Type="string">
+                </RadzenGridColumn>
+              </Columns>
+            </RadzenGrid>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+      <div class="col-md-12 col-xl-6">
+        <RadzenCard>
+          <ChildContent>
+            <RadzenHeading Size="H3" Text="Active Tasks">
+            </RadzenHeading>
+            <RadzenGrid @ref="grid1" Data="@getTasksResult" TItem="InDrivoHRM.Models.Crm.Task">
+              <Columns>
+                <RadzenGridColumn TItem="InDrivoHRM.Models.Crm.Task" SortProperty="Opportunity.User.FirstName" Title="Employee">
+                  <Template Context="radzenCrmModelsCrmTask">
+                    <RadzenImage Path="@(radzenCrmModelsCrmTask.Opportunity.User.Picture)" style="border-radius: 15px; height: 30px; width: 30px">
+                    </RadzenImage>
+                    <RadzenLabel Text="@($"{(radzenCrmModelsCrmTask.Opportunity.User.FirstName)}")">
+                    </RadzenLabel>
+                    <RadzenLabel Text="@($"{(radzenCrmModelsCrmTask.Opportunity.User.LastName)}")">
+                    </RadzenLabel>
+                  </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="InDrivoHRM.Models.Crm.Task" Property="Title" Title="Title">
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="InDrivoHRM.Models.Crm.Task" SortProperty="Opportunity.Name" Title="Opportunity">
+                  <Template Context="radzenCrmModelsCrmTask">
+                    <RadzenLabel style="display: block" Text="@($"{(radzenCrmModelsCrmTask.Opportunity.Name)}")">
+                    </RadzenLabel>
+                    <RadzenLabel Text="@($"{(radzenCrmModelsCrmTask.Opportunity.Contact.FirstName)}")">
+                    </RadzenLabel>
+                    <RadzenLabel Text="@($"{(radzenCrmModelsCrmTask.Opportunity.Contact.LastName)}")">
+                    </RadzenLabel>
+                  </Template>
+                </RadzenGridColumn>
+              </Columns>
+            </RadzenGrid>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>

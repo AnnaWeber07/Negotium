@@ -1,0 +1,32 @@
+﻿@inherits InDrivoHRM.Layouts.LoginLayoutComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using InDrivoHRM.Models.Crm
+@using Microsoft.AspNetCore.Identity;
+@using InDrivoHRM.Models
+@inject Microsoft.Extensions.Localization.IStringLocalizer<LoginLayout> L
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenBody @ref="body0" >
+  <ChildContent>
+    <RadzenImage Path="assets/images/login-background.png" style="bottom: 0; height: 100%; left: 0; position: absolute; right: 0; top: 0; width: 100%">
+    </RadzenImage>
+    <div class="row justify-content-center align-items-center layout-login-content">
+      <div class="col-xl-3 col-lg-4 col-md-5 col-sm-8 layout-login-col">
+        <RadzenCard style="margin-top: 0">
+          <ChildContent>
+            <RadzenImage Path="assets/images/logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 128px">
+            </RadzenImage>
+            <RadzenContentContainer Name="main">
+            @Body
+            </RadzenContentContainer>
+          </ChildContent>
+        </RadzenCard>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenBody>

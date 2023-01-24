@@ -1,0 +1,26 @@
+﻿@page "/unauthorized"
+@layout MainLayout
+@inherits InDrivoHRM.Pages.UnauthorizedComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using InDrivoHRM.Models.Crm
+@using Microsoft.AspNetCore.Identity;
+@using InDrivoHRM.Models
+@using Microsoft.AspNetCore.Authorization
+
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Unauthorized> L
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Unauthorized">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenHtml>
+          The current user is not authorized to see this page.
+        </RadzenHtml>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>

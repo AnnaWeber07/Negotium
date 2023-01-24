@@ -1,0 +1,50 @@
+﻿@page "/contacts"
+@layout MainLayout
+@inherits InDrivoHRM.Pages.ContactsComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using InDrivoHRM.Models.Crm
+@using Microsoft.AspNetCore.Identity;
+@using InDrivoHRM.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Contacts> L
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Contacts">
+    </RadzenHeading>
+    <RadzenTextBox @bind-Value="@contactFilter" Name="Textbox0">
+    </RadzenTextBox>
+    <RadzenButton Text="Search" Click="@Button1Click">
+    </RadzenButton>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@Button0Click">
+        </RadzenButton>
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@getContactsResult" FilterMode="FilterMode.Advanced" TItem="InDrivoHRM.Models.Crm.Contact" RowSelect="@Grid0RowSelect">
+          <Columns>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Property="Email" Title="Email">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Property="Company" Title="Company">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Property="LastName" Title="Last Name">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Property="FirstName" Title="First Name">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Property="Phone" Title="Phone">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="InDrivoHRM.Models.Crm.Contact" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+              <Template Context="radzenCrmModelsCrmContact">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@((args) =>GridDeleteButtonClick(args, radzenCrmModelsCrmContact))" @onclick:stopPropagation="true">
+                </RadzenButton>
+              </Template>
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>

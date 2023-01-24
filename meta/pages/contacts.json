@@ -1,0 +1,253 @@
+{
+  "access": [
+    "Authenticated"
+  ],
+  "components": [
+    {
+      "components": [
+        {
+          "name": "pageTitle",
+          "size": "H1",
+          "text": "Contacts",
+          "type": "heading"
+        },
+        {
+          "name": "textbox0",
+          "placeholder": "",
+          "type": "textbox",
+          "value": "${contactFilter}"
+        },
+        {
+          "events": {
+            "click": [
+              {
+                "name": "CRM.getContacts",
+                "parameters": [
+                  {
+                    "name": "$filter",
+                    "operator": "and",
+                    "value": [
+                      {
+                        "filters": [
+                          {
+                            "operation": "contains",
+                            "property": "Company",
+                            "type": "string",
+                            "value": "\"${contactFilter}\""
+                          },
+                          {
+                            "operation": "contains",
+                            "property": "FirstName",
+                            "type": "string",
+                            "value": "\"${contactFilter}\""
+                          },
+                          {
+                            "operation": "contains",
+                            "property": "LastName",
+                            "type": "string",
+                            "value": "\"${contactFilter}\""
+                          },
+                          {
+                            "operation": "contains",
+                            "property": "Email",
+                            "type": "string",
+                            "value": "\"${contactFilter}\""
+                          }
+                        ],
+                        "operator": "or"
+                      }
+                    ]
+                  }
+                ],
+                "then": [
+                  {
+                    "name": "getContactsResult",
+                    "type": "set",
+                    "value": "${result}",
+                    "valueType": "IEnumerable<InDrivoHRM.Models.Crm.Contact>"
+                  }
+                ],
+                "type": "invoke"
+              }
+            ]
+          },
+          "icon": "",
+          "name": "button1",
+          "text": "Search",
+          "type": "button"
+        },
+        {
+          "components": [
+            {
+              "class": "col-md-12",
+              "components": [
+                {
+                  "events": {
+                    "click": [
+                      {
+                        "path": "add-contact",
+                        "then": [
+                          {
+                            "code": "await grid0.Reload();",
+                            "type": "execute"
+                          },
+                          {
+                            "code": "await InvokeAsync(() => { StateHasChanged(); });",
+                            "type": "execute"
+                          }
+                        ],
+                        "type": "popup"
+                      }
+                    ]
+                  },
+                  "icon": "add_circle_outline",
+                  "name": "button0",
+                  "style": {
+                    "marginBottom": "10px"
+                  },
+                  "text": "Add",
+                  "type": "button"
+                },
+                {
+                  "allowFiltering": true,
+                  "allowPaging": true,
+                  "allowSorting": true,
+                  "columns": [
+                    {
+                      "property": "Email",
+                      "title": "Email"
+                    },
+                    {
+                      "property": "Company",
+                      "title": "Company"
+                    },
+                    {
+                      "property": "LastName",
+                      "title": "Last Name"
+                    },
+                    {
+                      "property": "FirstName",
+                      "title": "First Name"
+                    },
+                    {
+                      "property": "Phone",
+                      "title": "Phone"
+                    },
+                    {
+                      "filterable": false,
+                      "sortable": false,
+                      "template": [
+                        {
+                          "attributes": [
+                            {
+                              "name": "@onclick:stopPropagation",
+                              "value": true
+                            }
+                          ],
+                          "buttonStyle": "danger",
+                          "events": {
+                            "click": [
+                              {
+                                "condition": "await DialogService.Confirm(\"Are you sure you want to delete this record?\") == true",
+                                "error": [
+                                  {
+                                    "detail": "Unable to delete Contact",
+                                    "severity": "error",
+                                    "summary": "Error",
+                                    "type": "notify"
+                                  }
+                                ],
+                                "name": "CRM.deleteContact",
+                                "parameters": [
+                                  {
+                                    "name": "Id",
+                                    "value": "${data.Id}"
+                                  }
+                                ],
+                                "then": [
+                                  {
+                                    "code": "await grid0.Reload();",
+                                    "condition": "result != null",
+                                    "type": "execute"
+                                  }
+                                ],
+                                "type": "invoke"
+                              }
+                            ]
+                          },
+                          "icon": "close",
+                          "name": "gridDeleteButton",
+                          "size": "sm",
+                          "text": "",
+                          "type": "button"
+                        }
+                      ],
+                      "textAlign": "center",
+                      "width": "70px"
+                    }
+                  ],
+                  "data": "${getContactsResult}",
+                  "events": {
+                    "loadData": [],
+                    "rowSelect": [
+                      {
+                        "parameters": [
+                          {
+                            "name": "Id",
+                            "value": "${event.Id}"
+                          }
+                        ],
+                        "path": "edit-contact",
+                        "then": [
+                          {
+                            "code": "await InvokeAsync(() => { StateHasChanged(); });",
+                            "type": "execute"
+                          }
+                        ],
+                        "type": "popup"
+                      }
+                    ]
+                  },
+                  "filterMode": "advanced",
+                  "itemType": "InDrivoHRM.Models.Crm.Contact",
+                  "name": "grid0",
+                  "title": "",
+                  "type": "datagrid"
+                }
+              ],
+              "type": "col"
+            }
+          ],
+          "type": "row"
+        }
+      ],
+      "container": "main",
+      "type": "content"
+    }
+  ],
+  "events": {
+    "load": [
+      {
+        "name": "contactFilter",
+        "type": "set",
+        "value": "\"\"",
+        "valueType": "string"
+      },
+      {
+        "name": "CRM.getContacts",
+        "parameters": [],
+        "then": [
+          {
+            "name": "getContactsResult",
+            "type": "set",
+            "value": "${result}",
+            "valueType": "IEnumerable<InDrivoHRM.Models.Crm.Contact>"
+          }
+        ],
+        "type": "invoke"
+      }
+    ]
+  },
+  "layout": "Main",
+  "name": "Contacts"
+}
